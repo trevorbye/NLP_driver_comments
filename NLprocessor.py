@@ -25,8 +25,8 @@ with open("C:\\Users\\s-tbye\\Desktop\\comments2.txt", "r") as file:
         load_comment_entity_list.append(LoadCommentEntity.CommentEntity(row[0], row[1], row[2:]))
 
 it = iter(load_comment_entity_list)
-rawCommentIterator = iter(load_comment_entity_list)
-testIt = iter(load_comment_entity_list)
+raw_comment_iterator = iter(load_comment_entity_list)
+
 
 def build_raw_comment_list(iterator):
     raw_comment_list = []
@@ -43,6 +43,28 @@ def build_raw_comment_list(iterator):
                 raw_comment_list.append(comment)
 
     return raw_comment_list
+
+
+def build_word_list(comment_list):
+    vocabulary_list = []
+    exclude_list = []
+    exclude_list.append("red")
+    exclude_list.append("circl")
+    exclude_list.append("prior")
+    exclude_list.append("p")
+    exclude_list.append("u")
+    exclude_list.append("pu")
+    exclude_list.append("2")
+    exclude_list.append("2nd")
+
+    for comment in comment_list:
+        tokens = tokenize_stem_filter(comment)
+
+        for token in tokens:
+            if token not in vocabulary_list and token not in exclude_list:
+                vocabulary_list.append(token)
+
+    return vocabulary_list
 
 
 def tokenize_stem_filter(text):
@@ -63,10 +85,11 @@ def tokenize_stem_filter(text):
 
 
 #build corpus list
-raw_comment_list = build_raw_comment_list(rawCommentIterator)
+raw_comment_list = build_raw_comment_list(raw_comment_iterator)
+override_vocabulary_list = build_word_list(raw_comment_list)
 
 #define vectorizer params
-vectorizer = TfidfVectorizer(max_df=.10, min_df=5, max_features=20,
+vectorizer = TfidfVectorizer(max_df=.10, min_df=5, vocabulary=override_vocabulary_list,
                              use_idf=True, tokenizer=tokenize_stem_filter, ngram_range=(1, 3))
 
 #fit vecorizer to raw driver comment data
@@ -76,7 +99,7 @@ tfidf_matrix = vectorizer.fit_transform(raw_comment_list)
 terms = vectorizer.get_feature_names()
 
 #define clustering params
-k_means = KMeans(n_clusters=6)
+k_means = KMeans(n_clusters=8)
 k_means.fit_transform(tfidf_matrix)
 clusters = k_means.labels_.tolist()
 
@@ -86,7 +109,7 @@ clusters = k_means.labels_.tolist()
 #loop through cluster centroids and print wordlists
 order_centroids = k_means.cluster_centers_.argsort()[:, ::-1]
 
-for cluster in range(6):
+for cluster in range(8):
     print("Cluster %d wordlist:" % cluster)
     print()
 
