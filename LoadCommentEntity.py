@@ -1,6 +1,5 @@
 class CommentEntity:
 
-    def __init__(self, loadId, loadComment, receiveTime):
-        self.loadId = loadId
+    def __init__(self, tankerBase, loadComment):
         self.loadComment = loadComment
-        self.receiveTime = receiveTime
+        self.tankerBase = tankerBase
