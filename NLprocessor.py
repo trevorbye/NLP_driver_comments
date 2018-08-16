@@ -74,8 +74,6 @@ def tokenize_stem_filter(text):
             tokens.append(stemmer.stem(token))
 
     return tokens
-    #freq = nltk.FreqDist(tokens)
-    #freq.plot(50)
 
 
 #build corpus list and milkshed title list for plot output
@@ -116,17 +114,6 @@ dist = 1 - cosine_similarity(final_tfidf_matrix)
 
 #loop through cluster centroids and print wordlists
 order_centroids = k_means.cluster_centers_.argsort()[:, ::-1]
-
-#for cluster in range(5):
-    #print("Cluster %d wordlist:" % cluster)
-    #print()
-
-    #for ind in order_centroids[cluster, :10]:
-        #print(terms[ind], end=", ")
-
-    #print()
-    #print()
-
 
 #convert dist matrix to 2d array
 #mds = MDS(n_components=2, dissimilarity="precomputed", random_state=1)
@@ -190,29 +177,3 @@ for name, group in groups:
 ax.legend(numpoints=1)
 
 mpld3.save_html(fig, "C:\\Users\\s-tbye\\Desktop\\comment_clusters.html")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
